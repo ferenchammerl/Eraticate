@@ -5,8 +5,6 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -14,9 +12,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.eraticate.game.Eraticate;
 import com.eraticate.game.RatCamera;
-import com.eraticate.game.mapobjects.Rat;
-
-import java.util.ArrayList;
+import com.eraticate.game.RatWorld;
 
 /**
  * Created by Ferenc on 5/21/2015.
@@ -28,13 +24,11 @@ public class GameScreen extends RatScreen implements InputProcessor
     RatCamera camera; //To select a part of our map to look at
 
     Viewport viewport; //The image "taken" by the camera needs to be handled
-    float aspectRatio;
 
-    private TiledMap map;
-    private TiledMapTileLayer collLayer;
+    RatWorld ratWorld;
+
     private OrthogonalTiledMapRenderer mapRenderer;
 
-    private ArrayList<Rat> rats = new ArrayList<Rat>();
 
     public GameScreen(Eraticate game)
     {
@@ -45,13 +39,14 @@ public class GameScreen extends RatScreen implements InputProcessor
     @Override
     public void show()
     {
-        map = new TmxMapLoader().load("maps/demomap.tmx");
-        mapRenderer = new OrthogonalTiledMapRenderer(map);
+        ratWorld = new RatWorld(new TmxMapLoader().load("maps/demomap.tmx"));
+        ratWorld.initRats(0.11f);
+        mapRenderer = new OrthogonalTiledMapRenderer(ratWorld.getMap());
+
         camera = new RatCamera(0.5f, 1.5f, 3200);
         viewport = new FitViewport(960, Gdx.graphics.getHeight(), camera);
         camera.moveBy(0, 0);
-        collLayer = (TiledMapTileLayer) map.getLayers().get(1);
-        initRats();
+
 
     }
 
@@ -69,10 +64,7 @@ public class GameScreen extends RatScreen implements InputProcessor
         mapRenderer.render();
         batch.begin();
         batch.setProjectionMatrix(camera.combined);
-        for (Rat rat : rats)
-        {
-            rat.draw(batch, 64, 64);
-        }
+        ratWorld.Draw(batch, delta);
         batch.end();
     }
     @Override
@@ -166,16 +158,5 @@ public class GameScreen extends RatScreen implements InputProcessor
         return false;
     }
 
-    private void initRats()
-    {
-        for (int i = 1; i <= collLayer.getHeight(); i++)
-        {
-            for (int j = 1; j <= collLayer.getWidth(); j++)
-            {
-                if (collLayer.getCell(i, j) == null) continue;
-                if (Math.random() < 0.15) rats.add(new Rat(i, j, collLayer));
 
-            }
-        }
-    }
 }
