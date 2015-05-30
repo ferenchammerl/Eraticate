@@ -4,13 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.eraticate.game.Eraticate;
-import com.eraticate.game.Map;
+import com.eraticate.game.RatCamera;
 
 /**
  * Created by Ferenc on 5/21/2015.
@@ -19,37 +22,29 @@ public class GameScreen extends RatScreen implements InputProcessor
 {
     private final Eraticate game; //Instance of the game class so we are able to access its methods (setScreen primarily)
     private Batch batch; //The object handling the render
-    OrthographicCamera camera; //To select a part of our map to look at
-    float xMin, xMax, yMin, yMax; //Boundaries of the map
+    RatCamera camera; //To select a part of our map to look at
+
     Viewport viewport; //The image "taken" by the camera needs to be handled
     float aspectRatio;
 
-    private Map map;
-    private int numberOfFieldsInLine = 6; //The size of what we see
+    private TiledMap map;
+    private TiledMapTileLayer collLayer;
+    private OrthogonalTiledMapRenderer mapRenderer;
 
     public GameScreen(Eraticate game)
     {
         this.game = game;
         batch = game.getBatch();
-        camera = new OrthographicCamera();
-        aspectRatio = (float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth();
-        viewport = new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getWidth() * aspectRatio, camera);
-        viewport.apply();
-
-
-        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
-
-//        camera.translate(camera.viewportWidth, camera.viewportHeight / 2, 0);
         Gdx.input.setInputProcessor(this);
     }
     @Override
     public void show()
     {
-        map = new Map(15, 15);
-        map.Default();
-        map.setFieldSize((int) (viewport.getScreenWidth() * aspectRatio / numberOfFieldsInLine));
-
-        calcCameraBoundaries();
+        map = new TmxMapLoader().load("maps/demomap.tmx");
+        mapRenderer = new OrthogonalTiledMapRenderer(map);
+        camera = new RatCamera(0.5f, 1.5f, 3200);
+        viewport = new FitViewport(960, Gdx.graphics.getHeight(), camera);
+        camera.moveBy(0, 0);
     }
 
     @Override
@@ -62,30 +57,19 @@ public class GameScreen extends RatScreen implements InputProcessor
     {
         Gdx.gl.glClearColor(0, 0.5f, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        batch.begin();
-        batch.setProjectionMatrix(camera.combined);
-        map.Draw(batch, new OrthographicCamera());
-        batch.end();
+        mapRenderer.setView(camera);
+        mapRenderer.render();
     }
     @Override
     public void resize(int width, int height)
     {
-        //Camera settings
         viewport.update(width, height);
-        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+        camera.calcCameraBoundaries();
+//        cameraMoveTo(0, 0);
+        viewport.update(viewport.getScreenWidth(), viewport.getScreenHeight());
 
-        calcCameraBoundaries();
-        //Texture controller
-        map.setFieldSize(height / numberOfFieldsInLine);
     }
-    private void calcCameraBoundaries()
-    {
-        xMin = camera.viewportWidth / 2;
-        xMax = map.getFields()[0].length * map.getFieldSize() - camera.viewportWidth / 2;
-        yMin = camera.viewportHeight / 2;
-        yMax = map.getFields().length * map.getFieldSize() - camera.viewportHeight / 2;
-    }
+
     @Override
     public void pause()
     {
@@ -107,39 +91,20 @@ public class GameScreen extends RatScreen implements InputProcessor
 
     }
 
-    // Map movements
-    private void zoomIn()
-    {
-        numberOfFieldsInLine--;
-        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-    }
-    private void zoomOut()
-    {
-        numberOfFieldsInLine++;
-        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-    }
-
-    private void cameraMoveTo(float x, float y)
-    {
-
-        if (x < xMin) x = xMin;
-        if (x > xMax) x = xMax;
-
-        if (y < yMin) y = yMin;
-        if (y > yMax) y = yMax;
-        camera.position.set(x, y, 0);
-    }
-
     @Override
     public boolean keyDown(int keycode)
     {
         if (keycode == Keys.PLUS)
         {
-            zoomIn();
+            camera.zoomIn();
+        }
+        if (keycode == Keys.F)
+        {
+
         }
         if (keycode == Keys.MINUS)
         {
-            zoomOut();
+            camera.zoomOut();
         }
 
         return false;
@@ -159,7 +124,7 @@ public class GameScreen extends RatScreen implements InputProcessor
     public boolean touchDown(int screenX, int screenY, int pointer, int button)
     {
         lastPos.set(screenX, screenY);
-        return false;
+        return true;
     }
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button)
@@ -170,10 +135,10 @@ public class GameScreen extends RatScreen implements InputProcessor
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer)
     {
-        cameraMoveTo(camera.position.x + lastPos.x - screenX, camera.position.y + screenY - lastPos.y);
-
+        camera.moveBy((lastPos.x - screenX), (screenY - lastPos.y));
         lastPos.set(screenX, screenY);
-        return false;
+
+        return true;
     }
     @Override
     public boolean mouseMoved(int screenX, int screenY)

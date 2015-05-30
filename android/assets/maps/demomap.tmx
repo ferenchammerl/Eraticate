@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="64" tileheight="64" nextobjectid="1">
+ <tileset firstgid="1" name="terrain" tilewidth="64" tileheight="64">
+  <image source="tiles.png" width="512" height="448"/>
+ </tileset>
+ <layer name="Grass" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt1LENACAMA7Cycw7/38YDMCGkUjx4T6WkLSIaUN5IkOHH7HCLXcDabhs2wykdAl5R+V9Vvg1Y6wkyAAAAAO+ZcBALaA==
+  </data>
+ </layer>
+ <layer name="Road" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztWouNwyAMzSjHndK5MhqjdJQb5YiiSDnwh4dJSCM/CVXC2ObF2DVpp8lxd8zTtHynzytGANbOII8flLgBaX8LsDYitp/CI2zn6s0NNL4SkGfWOx7J3hdiz+Ir8xt72nYeuK/Mb+xpuycPxFbvPH9tNlk5MhBbAeShPaOedfnMeDgPHCN5fEqeOw8cF9Rdqdd+N/TmZF82Mh4o9rpA7eMpPNbYJ3lcR9jWRm4k+S/id1Q8KvKy0JcwZ+dfu3tq8r33oPqKM3lIvlrko+Ih+WqR1/Ko6LMLfQTOYwNwrhbFT6GP4Ck8rPdD51GsLfQRaP3WS5Ad5dS649ys7PMu+UHFtbZ3WN85azw13IFHjzvomfXq2CcqPWKhi+Kqumvx0cOGFvM78FjzS7v/afVq18/tBGKO65+t56omv1pzkKujlnog+FL1n8JDW8P93sidR+2+1YIePLh4cfGg5q3fH87jnzxa5608avSdx2fxEPKD1KPuCdZe9+R4kHrWewaF/J2c1HcIcnJfHI8r/0+BgHsWHH/rGXKMxx+YpKyj
+  </data>
+ </layer>
+</map>
