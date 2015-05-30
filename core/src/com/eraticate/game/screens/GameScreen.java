@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -27,6 +28,7 @@ public class GameScreen extends RatScreen implements InputProcessor
     float aspectRatio;
 
     private TiledMap map;
+    private TiledMapTileLayer collLayer;
     private OrthogonalTiledMapRenderer mapRenderer;
 
     public GameScreen(Eraticate game)
