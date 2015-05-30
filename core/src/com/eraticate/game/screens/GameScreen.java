@@ -14,6 +14,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.eraticate.game.Eraticate;
 import com.eraticate.game.RatCamera;
+import com.eraticate.game.mapobjects.Rat;
+
+import java.util.ArrayList;
 
 /**
  * Created by Ferenc on 5/21/2015.
@@ -31,6 +34,8 @@ public class GameScreen extends RatScreen implements InputProcessor
     private TiledMapTileLayer collLayer;
     private OrthogonalTiledMapRenderer mapRenderer;
 
+    private ArrayList<Rat> rats = new ArrayList<Rat>();
+
     public GameScreen(Eraticate game)
     {
         this.game = game;
@@ -45,6 +50,9 @@ public class GameScreen extends RatScreen implements InputProcessor
         camera = new RatCamera(0.5f, 1.5f, 3200);
         viewport = new FitViewport(960, Gdx.graphics.getHeight(), camera);
         camera.moveBy(0, 0);
+        collLayer = (TiledMapTileLayer) map.getLayers().get(1);
+        initRats();
+
     }
 
     @Override
@@ -59,13 +67,19 @@ public class GameScreen extends RatScreen implements InputProcessor
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         mapRenderer.setView(camera);
         mapRenderer.render();
+        batch.begin();
+        batch.setProjectionMatrix(camera.combined);
+        for (Rat rat : rats)
+        {
+            rat.draw(batch, 64, 64);
+        }
+        batch.end();
     }
     @Override
     public void resize(int width, int height)
     {
         viewport.update(width, height);
         camera.calcCameraBoundaries();
-//        cameraMoveTo(0, 0);
         viewport.update(viewport.getScreenWidth(), viewport.getScreenHeight());
 
     }
@@ -91,6 +105,7 @@ public class GameScreen extends RatScreen implements InputProcessor
 
     }
 
+    //INPUT METHODS
     @Override
     public boolean keyDown(int keycode)
     {
@@ -149,5 +164,18 @@ public class GameScreen extends RatScreen implements InputProcessor
     public boolean scrolled(int amount)
     {
         return false;
+    }
+
+    private void initRats()
+    {
+        for (int i = 1; i <= collLayer.getHeight(); i++)
+        {
+            for (int j = 1; j <= collLayer.getWidth(); j++)
+            {
+                if (collLayer.getCell(i, j) == null) continue;
+                if (Math.random() < 0.15) rats.add(new Rat(i, j, collLayer));
+
+            }
+        }
     }
 }

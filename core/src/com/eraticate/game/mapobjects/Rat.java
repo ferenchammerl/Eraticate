@@ -1,7 +1,9 @@
 package com.eraticate.game.mapobjects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 /**
@@ -10,19 +12,32 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 public class Rat implements Drawable
 {
 
+    public static final Texture def = new Texture(Gdx.files.internal("textures/rat/rat.png"));
     Texture texture;
     int xPos;
     int yPos;
-    public Rat(Texture texture, int xPos, int yPos)
+    TiledMapTileLayer collLayer;
+
+    public Rat(int xPos, int yPos, TiledMapTileLayer collLayer)
+    {
+        this(def, xPos, yPos, collLayer);
+    }
+    public Rat(Texture texture, int xPos, int yPos, TiledMapTileLayer collLayer)
     {
         this.texture = texture;
         this.xPos = xPos;
         this.yPos = yPos;
+        this.collLayer = collLayer;
     }
+
     @Override
     public void draw(Batch batch, float x, float y, float width, float height)
     {
         batch.draw(texture, x, y, width, height);
+    }
+    public void draw(Batch batch, float width, float height)
+    {
+        draw(batch, width * xPos, height * yPos, width, height);
     }
     @Override
     public float getLeftWidth()
