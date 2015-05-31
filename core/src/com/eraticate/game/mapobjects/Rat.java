@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
+import java.util.Random;
+
 /**
  * Created by Ferenc on 5/26/2015.
  */
@@ -26,7 +28,7 @@ public class Rat
 
     private void change_xPos(float v)
     {
-        int desX = moving == Moving.Right ? (int) (xPos + v) : (int) (xPos + v) + 1;
+        int desX = (int) (xPos + v) + (moving == Moving.Right ? 0 : 1);
         if (collLayer.getCell(desX + (moving == Moving.Right ? 1 : -1), (int) yPos) != null)
         {
             xPos += v;
@@ -35,7 +37,6 @@ public class Rat
             xPos = desX;
             moving = Moving.No;
 
-            Gdx.app.log("Frozen because xpos is", String.valueOf(xPos));
         }
     }
     private void change_yPos(float v)
@@ -94,30 +95,34 @@ public class Rat
     {
         if (moving == Moving.No)
         {
-            float x = (float) Math.random();
-            if (collLayer.getCell((int) xPos + 1, (int) yPos) != null)
-            {
-                moving = Moving.Right;
-                if (x < 0.25f) return;
-            }
-            x -= 0.25f;
-            if (collLayer.getCell((int) xPos - 1, (int) yPos) != null)
-            {
-                moving = Moving.Left;
-                if (x < 0.25f) return;
-            }
-            x -= 0.25f;
+            Random rand = new Random();
 
-            if (collLayer.getCell((int) xPos, (int) yPos + 1) != null)
-            {
-                moving = Moving.Up;
-                if (x < 0.25f) return;
-            }
-            if (collLayer.getCell((int) xPos, (int) yPos - 1) != null)
-            {
-                moving = Moving.Down;
-            }
-
+            int randomNum = rand.nextInt(4);
+            moving = new Moving[]{Moving.Up, Moving.Down, Moving.Right, Moving.Left}[randomNum];
+//            float x = (float) Math.random();
+//            if (collLayer.getCell((int) xPos + 1, (int) yPos) != null)
+//            {
+//                moving = Moving.Right;
+//                if (x < 0.25f) return;
+//            }
+//            x -= 0.25f;
+//            if (collLayer.getCell((int) xPos - 1, (int) yPos) != null)
+//            {
+//                moving = Moving.Left;
+//                if (x < 0.25f) return;
+//            }
+//            x -= 0.25f;
+//
+//            if (collLayer.getCell((int) xPos, (int) yPos + 1) != null)
+//            {
+//                moving = Moving.Up;
+//                if (x < 0.25f) return;
+//            }
+//            if (collLayer.getCell((int) xPos, (int) yPos - 1) != null)
+//            {
+//                moving = Moving.Down;
+//            }
+//
             return;
         }
         switch (moving)
