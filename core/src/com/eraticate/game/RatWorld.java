@@ -1,5 +1,7 @@
 package com.eraticate.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -32,13 +34,24 @@ public class RatWorld
         {
             for (int j = 1; j <= collLayer.getWidth(); j++)
             {
-                if (collLayer.getCell(i, j) == null) continue;
-                if (Math.random() < density) rats.add(new Rat(i, j, collLayer));
-
+                if (collLayer.getCell(i, j) != null)
+                {
+                    if (Math.random() < density)
+                    {
+                        rats.add(new Rat(i, j, collLayer));
+                    }
+                }
             }
         }
     }
-    public void Draw(Batch batch, float delta)
+    public void update(float delta)
+    {
+        for (Rat rat : rats)
+        {
+            rat.update(delta);
+        }
+    }
+    public void Draw(Batch batch)
     {
         for (Rat rat : rats)
         {

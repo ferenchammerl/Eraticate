@@ -43,17 +43,16 @@ public class GameScreen extends RatScreen implements InputProcessor
         ratWorld.initRats(0.11f);
         mapRenderer = new OrthogonalTiledMapRenderer(ratWorld.getMap());
 
-        camera = new RatCamera(0.5f, 1.5f, 3200);
+        camera = new RatCamera(0.5f, 2f, 3200);
         viewport = new FitViewport(960, Gdx.graphics.getHeight(), camera);
         camera.moveBy(0, 0);
-
-
     }
 
     @Override
     public void update(float delta)
     {
         camera.update();
+        ratWorld.update(delta);
     }
     @Override
     public void renderScreen(float delta)
@@ -64,7 +63,7 @@ public class GameScreen extends RatScreen implements InputProcessor
         mapRenderer.render();
         batch.begin();
         batch.setProjectionMatrix(camera.combined);
-        ratWorld.Draw(batch, delta);
+        ratWorld.Draw(batch);
         batch.end();
     }
     @Override
