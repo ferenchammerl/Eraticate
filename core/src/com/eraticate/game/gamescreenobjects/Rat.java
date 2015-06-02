@@ -23,6 +23,8 @@ public class Rat extends GameScreenObjects
     private boolean kill;
 
 
+
+
     private void change_xPos(float v)
     {
         /* The conditional operators reintroduce information that was lost during the float to int conversion. */
@@ -51,7 +53,11 @@ public class Rat extends GameScreenObjects
 
         }
     }
-
+    public Rat(Texture texture, int coordinate, int coordinate1, TiledMapTileLayer collLayer, float speed)
+    {
+        this(texture, coordinate, coordinate1, collLayer);
+        this.speed = speed;
+    }
     public Rat(int xPos, int yPos, TiledMapTileLayer collLayer)
     {
         this(def, xPos, yPos, collLayer);

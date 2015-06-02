@@ -72,7 +72,7 @@ public class RatWorld
         {
 
             int[] coordinates = roadCoords.get(new Random().nextInt(roadCoords.size()));
-            rats.add(new Rat(new Texture(Gdx.files.internal("textures/rat/ratsecond.png")), coordinates[0], coordinates[1], collLayer));
+            rats.add(new Rat(new Texture(Gdx.files.internal("textures/rat/ratsecond.png")), coordinates[0], coordinates[1], collLayer,7f));
             timeSinceLastSpawn = 0;
         }
         for (Rat rat : rats)
