@@ -1,6 +1,5 @@
 package com.eraticate.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -60,21 +59,17 @@ public class RatWorld
             rat.draw(batch, 64, 64);
         }
     }
-    public void tapped(float screenX, float screenY)
+    public boolean executed(float screenX, float screenY)
     {
-        Gdx.app.log("Tapped", "yes it is");
-        Gdx.app.log("Tap screen pos x", String.valueOf(screenX));
-        Gdx.app.log("Tap screen pos y", String.valueOf(screenY));
+
         for (int i = 0; i < rats.size(); i++)
         {
             if (rats.get(i).isClicked(screenX, screenY, i))
             {
-
-                Gdx.app.log("ClickedIndex", String.valueOf(i));
                 rats.remove(i);
-                Gdx.input.vibrate(500);
-                break;
+                return true;
             }
         }
+        return false;
     }
 }

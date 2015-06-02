@@ -47,6 +47,6 @@ public abstract class GameScreenObjects
 
         Gdx.app.log(i + " pos x", String.valueOf(xPosScreen));
         Gdx.app.log(i + " pos y ", String.valueOf(yPosScreen));
-        return xPosScreen < screenX && screenX < xPosScreen + 64 && yPosScreen < screenY && screenY < yPosScreen + 64;
+        return xPosScreen-16 < screenX && screenX < xPosScreen + 80 && yPosScreen < screenY && screenY < yPosScreen + 80;
     }
 }

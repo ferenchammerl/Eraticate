@@ -1,11 +1,11 @@
 package com.eraticate.game.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -19,7 +19,7 @@ import com.eraticate.game.RatWorld;
 /**
  * Created by Ferenc on 5/21/2015.
  */
-public class GameScreen extends RatScreen implements InputProcessor
+public class GameScreen extends RatScreen implements InputProcessor, GestureDetector.GestureListener
 {
     private final Eraticate game; //Instance of the game class so we are able to access its methods (setScreen primarily)
     private Batch batch; //The object handling the render
@@ -77,7 +77,6 @@ public class GameScreen extends RatScreen implements InputProcessor
     {
         mapViewport.update(width, height);
         camera.calcCameraBoundaries();
-        mapViewport.update(mapViewport.getScreenWidth(), mapViewport.getScreenHeight());
 
     }
 
@@ -137,13 +136,12 @@ public class GameScreen extends RatScreen implements InputProcessor
     {
         lastPos.set(screenX, screenY);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.A))
-        {
-            Vector3 vec = new Vector3(screenX, screenY, 0);
-            camera.unproject(vec);
-            ratWorld.tapped(vec.x, vec.y);
+        Vector3 vec = new Vector3(screenX, screenY, 0);
+        camera.unproject(vec);
+        if (ratWorld.executed(vec.x, vec.y))
+            Gdx.input.vibrate(200);
 
-        }
+
         return true;
     }
     @Override
@@ -172,4 +170,46 @@ public class GameScreen extends RatScreen implements InputProcessor
     }
 
 
+    @Override
+    public boolean touchDown(float x, float y, int pointer, int button)
+    {
+        return false;
+    }
+    @Override
+    public boolean tap(float x, float y, int count, int button)
+    {
+        return false;
+    }
+    @Override
+    public boolean longPress(float x, float y)
+    {
+        return false;
+    }
+    @Override
+    public boolean fling(float velocityX, float velocityY, int button)
+    {
+        return false;
+    }
+    @Override
+    public boolean pan(float x, float y, float deltaX, float deltaY)
+    {
+        return false;
+    }
+    @Override
+    public boolean panStop(float x, float y, int pointer, int button)
+    {
+        return false;
+    }
+    @Override
+    public boolean zoom(float initialDistance, float distance)
+    {
+        Gdx.app.log("zoom", String.valueOf(camera.zoom));
+        camera.zoom = initialDistance / distance;
+        return false;
+    }
+    @Override
+    public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2)
+    {
+        return false;
+    }
 }

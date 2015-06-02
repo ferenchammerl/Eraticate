@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -13,19 +14,13 @@ import java.util.Random;
 public class Rat extends GameScreenObjects
 {
 
-    public static final Texture right = new Texture(Gdx.files.internal("textures/rat/ratright.png"));
-    public static final Texture left = new Texture(Gdx.files.internal("textures/rat/ratleft.png"));
-    public static final Texture up = new Texture(Gdx.files.internal("textures/rat/ratup.png"));
-    public static final Texture down = new Texture(Gdx.files.internal("textures/rat/ratdown.png"));
+    public static final Texture def = new Texture(Gdx.files.internal("textures/rat/ratdef.png"));
 
     float speed = 5f;
     Moving moving = Moving.No;
 
     TiledMapTileLayer collLayer;
     private boolean kill;
-
-    public boolean isKill() {return kill;}
-    public void setKill() {this.kill = true;}
 
 
     private void change_xPos(float v)
@@ -59,7 +54,7 @@ public class Rat extends GameScreenObjects
 
     public Rat(int xPos, int yPos, TiledMapTileLayer collLayer)
     {
-        this(right, xPos, yPos, collLayer);
+        this(def, xPos, yPos, collLayer);
     }
     public Rat(Texture texture, int xPos, int yPos, TiledMapTileLayer collLayer)
     {
@@ -69,22 +64,26 @@ public class Rat extends GameScreenObjects
     @Override
     public void draw(Batch batch, float x, float y, float width, float height)
     {
+        float rotation;
         switch (moving)
         {
             case Right:
-                texture = right;
+                rotation = 270;
                 break;
             case Left:
-                texture = left;
+                rotation = 90;
                 break;
             case Up:
-                texture = up;
+                rotation = 0;
                 break;
             case Down:
-                texture = down;
+                rotation = 180;
                 break;
+            default:
+                rotation = 0;
         }
-        batch.draw(texture, x, y, width, height); //figure it out how to rotate texture
+        //  batch.draw(texture, x, y, 32, 32, width, height, 1, 1, 157.07f, 0, 0, 768, 768, false, false); //figure it out how to rotate texture
+        batch.draw(texture, x, y, 32, 32, width, height, 1, 1, rotation, 0, 0, 768, 768, false, false);
     }
     public void draw(Batch batch, float width, float height)
     {
@@ -98,35 +97,26 @@ public class Rat extends GameScreenObjects
     {
         if (moving == Moving.No)
         {
-            Random rand = new Random();
+            ArrayList<Moving> directions = new ArrayList<Moving>();
+            if (collLayer.getCell((int) xPos + 1, (int) yPos) != null)
+            {
+                directions.add(Moving.Right);
+            }
+            if (collLayer.getCell((int) xPos - 1, (int) yPos) != null)
+            {
+                directions.add(Moving.Left);
+            }
 
-            int randomNum = rand.nextInt(4);
-            moving = new Moving[]{Moving.Up, Moving.Down, Moving.Right, Moving.Left}[randomNum];
-//            float x = (float) Math.random();
-//            if (collLayer.getCell((int) xPos + 1, (int) yPos) != null)
-//            {
-//                moving = Moving.Right;
-//                if (x < 0.25f) return;
-//            }
-//            x -= 0.25f;
-//            if (collLayer.getCell((int) xPos - 1, (int) yPos) != null)
-//            {
-//                moving = Moving.Left;
-//                if (x < 0.25f) return;
-//            }
-//            x -= 0.25f;
-//
-//            if (collLayer.getCell((int) xPos, (int) yPos + 1) != null)
-//            {
-//                moving = Moving.Up;
-//                if (x < 0.25f) return;
-//            }
-//            if (collLayer.getCell((int) xPos, (int) yPos - 1) != null)
-//            {
-//                moving = Moving.Down;
-//            }
-//
-            return;
+            if (collLayer.getCell((int) xPos, (int) yPos + 1) != null)
+            {
+                directions.add(Moving.Up);
+            }
+            if (collLayer.getCell((int) xPos, (int) yPos - 1) != null)
+            {
+                directions.add(Moving.Down);
+            }
+            if (directions.size() == 0) return;
+            moving = directions.get(new Random().nextInt(directions.size()));
         }
         switch (moving)
         {
