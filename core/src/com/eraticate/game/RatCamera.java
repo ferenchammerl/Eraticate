@@ -16,10 +16,12 @@ public class RatCamera extends OrthographicCamera
     float xMin, xMax, yMin, yMax; //Boundaries of the map
 
 
-    private void setZoom(float zoom)
+    public void setZoom(float zoom)
     {
         zoom = zoom < minZoom ? minZoom : zoom > maxZoom ? maxZoom : zoom;
         this.zoom = zoom;
+        calcCameraBoundaries();
+        moveBy(0, 0);
     }
 
 

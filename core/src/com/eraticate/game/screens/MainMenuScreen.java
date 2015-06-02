@@ -19,7 +19,6 @@ import com.eraticate.game.Eraticate;
 
 public class MainMenuScreen extends RatScreen
 {
-    private final Eraticate game;
     private Batch batch;
 
     private Stage stage;
@@ -38,11 +37,11 @@ public class MainMenuScreen extends RatScreen
     Music mainTheme;
 
 
-    public MainMenuScreen(Eraticate eraticate)
+    public MainMenuScreen(Eraticate game)
     {
-        this.game = eraticate;
-        this.batch = eraticate.getBatch();
-        this.stage = new Stage(new StretchViewport(800, 480), eraticate.getBatch());
+        super(game);
+        this.batch = game.getBatch();
+        this.stage = new Stage(new StretchViewport(800, 480), game.getBatch());
         this.mainTheme = Gdx.audio.newMusic(Gdx.files.internal("audio/music/mainmenu.wav"));
         mainTheme.setLooping(true);
         mainTheme.play();
