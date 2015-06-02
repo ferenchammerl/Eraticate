@@ -1,4 +1,4 @@
-package com.eraticate.game.mapobjects;
+package com.eraticate.game.gamescreenobjects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,7 +10,7 @@ import java.util.Random;
 /**
  * Created by Ferenc on 5/26/2015.
  */
-public class Rat
+public class Rat extends GameScreenObjects
 {
 
     public static final Texture right = new Texture(Gdx.files.internal("textures/rat/ratright.png"));
@@ -18,18 +18,22 @@ public class Rat
     public static final Texture up = new Texture(Gdx.files.internal("textures/rat/ratup.png"));
     public static final Texture down = new Texture(Gdx.files.internal("textures/rat/ratdown.png"));
 
-    Texture texture;
-    float xPos;
-
-    float yPos;
-    float speed = 8f;
+    float speed = 5f;
     Moving moving = Moving.No;
+
     TiledMapTileLayer collLayer;
+    private boolean kill;
+
+    public boolean isKill() {return kill;}
+    public void setKill() {this.kill = true;}
+
 
     private void change_xPos(float v)
     {
+        /* The conditional operators reintroduce information that was lost during the float to int conversion. */
         int desX = (int) (xPos + v) + (moving == Moving.Right ? 0 : 1);
-        if (collLayer.getCell(desX + (moving == Moving.Right ? 1 : -1), (int) yPos) != null)
+        if (collLayer.getCell(desX + (moving == Moving.Right ? 1 : -1), (int) yPos) != null) //if can continue walking
+        //1 and -1 so we know when we hit a wall
         {
             xPos += v;
         } else
@@ -41,13 +45,14 @@ public class Rat
     }
     private void change_yPos(float v)
     {
-        int posY = (int) (yPos + v) + (moving == Moving.Up ? 0 : 1);
-        if (collLayer.getCell((int) xPos, posY + (moving == Moving.Up ? 1 : -1)) != null)
-        {yPos += v;} else
+        int desY = (int) (yPos + v) + (moving == Moving.Up ? 0 : 1);
+        if (collLayer.getCell((int) xPos, desY + (moving == Moving.Up ? 1 : -1)) != null)
         {
-            yPos = posY;
+            yPos += v;
+        } else
+        {
+            yPos = desY;
             moving = Moving.No;
-            Gdx.app.log("Frozen because ypos is", String.valueOf(yPos));
 
         }
     }
@@ -58,12 +63,10 @@ public class Rat
     }
     public Rat(Texture texture, int xPos, int yPos, TiledMapTileLayer collLayer)
     {
-        this.texture = texture;
-        this.xPos = xPos;
-        this.yPos = yPos;
+        super(texture, xPos, yPos);
         this.collLayer = collLayer;
     }
-
+    @Override
     public void draw(Batch batch, float x, float y, float width, float height)
     {
         switch (moving)
@@ -81,7 +84,7 @@ public class Rat
                 texture = down;
                 break;
         }
-        batch.draw(texture, x, y, width, height);
+        batch.draw(texture, x, y, width, height); //figure it out how to rotate texture
     }
     public void draw(Batch batch, float width, float height)
     {

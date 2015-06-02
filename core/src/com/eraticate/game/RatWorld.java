@@ -1,11 +1,11 @@
 package com.eraticate.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.eraticate.game.mapobjects.Rat;
+import com.eraticate.game.gamescreenobjects.GameScreenObjects;
+import com.eraticate.game.gamescreenobjects.Rat;
 
 import java.util.ArrayList;
 
@@ -17,6 +17,7 @@ public class RatWorld
     private TiledMapTileLayer collLayer;
     private TiledMap map;
     private ArrayList<Rat> rats = new ArrayList<Rat>();
+    private ArrayList<GameScreenObjects> eraticators = new ArrayList<GameScreenObjects>();
 
     public TiledMap getMap()
     {
@@ -36,6 +37,8 @@ public class RatWorld
             {
                 if (collLayer.getCell(i, j) != null)
                 {
+
+
                     if (Math.random() < density)
                     {
                         rats.add(new Rat(i, j, collLayer));
@@ -43,6 +46,8 @@ public class RatWorld
                 }
             }
         }
+        //eraticators.add(new Poison(new Texture(Gdx.files.internal("textures/eraticators/poison.png")), 5, 5));
+
     }
     public void update(float delta)
     {
@@ -56,6 +61,26 @@ public class RatWorld
         for (Rat rat : rats)
         {
             rat.draw(batch, 64, 64);
+        }
+        for (GameScreenObjects eraticator : eraticators)
+        {
+            eraticator.draw(batch, 64, 64);
+        }
+    }
+    public void tapped(float screenX, float screenY)
+    {
+        Gdx.app.log("Tapped", "yes it is");
+        Gdx.app.log("Tap screen pos x", String.valueOf(screenX));
+        Gdx.app.log("Tap screen pos y", String.valueOf(screenY));
+        for (int i = 0; i < rats.size(); i++)
+        {
+            if (rats.get(i).isClicked(screenX, screenY, i))
+            {
+
+                Gdx.app.log("ClickedIndex", String.valueOf(i));
+                rats.remove(i);
+                break;
+            }
         }
     }
 }
