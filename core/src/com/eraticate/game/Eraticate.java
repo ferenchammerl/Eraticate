@@ -21,7 +21,7 @@ public class Eraticate extends Game
     public void create()
     {
         batch = new SpriteBatch();
-        this.setScreen(new GameScreen(this));
+        this.setScreen(new MainMenuScreen(this));
     }
 
 

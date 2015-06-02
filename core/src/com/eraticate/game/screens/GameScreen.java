@@ -19,13 +19,11 @@ import com.eraticate.game.RatWorld;
  */
 public class GameScreen extends RatScreen implements GestureDetector.GestureListener
 {
-    private Batch batch; //The object handling the render
-    RatCamera camera; //To select a part of our map to look at
-
-    Viewport mapViewport; //The image "taken" by the camera needs to be handled
-
-    RatWorld ratWorld;
-    private OrthogonalTiledMapRenderer mapRenderer;
+    private Batch batch;                                // The object necessary for rendering
+    RatCamera camera;                                   // To select a part of our map to look at
+    Viewport mapViewport;                               // The image "taken" by the camera needs to be handled
+    RatWorld ratWorld;                                  // The object managing the game logic
+    private OrthogonalTiledMapRenderer mapRenderer;     // The object that renders the map
 
 
     public GameScreen(Eraticate game)
