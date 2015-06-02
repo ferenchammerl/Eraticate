@@ -32,15 +32,14 @@ public class RatCamera extends OrthographicCamera
 
     public void zoomIn()
     {
-        setZoom(zoom - zoomSpeed);
-
         Gdx.app.log("zoom", String.valueOf(zoom));
+        setZoom(zoom - zoomSpeed);
         calcCameraBoundaries();
     }
     public void zoomOut()
     {
-        setZoom(zoom + zoomSpeed);
         Gdx.app.log("zoom", String.valueOf(zoom));
+        setZoom(zoom + zoomSpeed);
         calcCameraBoundaries();
     }
 

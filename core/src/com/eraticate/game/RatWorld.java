@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.eraticate.game.gamescreenobjects.GameScreenObjects;
 import com.eraticate.game.gamescreenobjects.Rat;
 
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ public class RatWorld
     private TiledMapTileLayer collLayer;
     private TiledMap map;
     private ArrayList<Rat> rats = new ArrayList<Rat>();
-    private ArrayList<GameScreenObjects> eraticators = new ArrayList<GameScreenObjects>();
 
     public TiledMap getMap()
     {
@@ -46,7 +44,6 @@ public class RatWorld
                 }
             }
         }
-        //eraticators.add(new Poison(new Texture(Gdx.files.internal("textures/eraticators/poison.png")), 5, 5));
 
     }
     public void update(float delta)
@@ -62,10 +59,6 @@ public class RatWorld
         {
             rat.draw(batch, 64, 64);
         }
-        for (GameScreenObjects eraticator : eraticators)
-        {
-            eraticator.draw(batch, 64, 64);
-        }
     }
     public void tapped(float screenX, float screenY)
     {
@@ -79,6 +72,7 @@ public class RatWorld
 
                 Gdx.app.log("ClickedIndex", String.valueOf(i));
                 rats.remove(i);
+                Gdx.input.vibrate(500);
                 break;
             }
         }

@@ -5,19 +5,16 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.eraticate.game.Eraticate;
 import com.eraticate.game.RatCamera;
 import com.eraticate.game.RatWorld;
-import com.eraticate.game.gamescreenobjects.MenuItem;
-import com.eraticate.game.gamescreenobjects.RatMenu;
 
 /**
  * Created by Ferenc on 5/21/2015.
@@ -29,11 +26,8 @@ public class GameScreen extends RatScreen implements InputProcessor
     RatCamera camera; //To select a part of our map to look at
 
     Viewport mapViewport; //The image "taken" by the camera needs to be handled
-    Viewport menuViewport; //The image "taken" by the camera needs to be handled
 
     RatWorld ratWorld;
-    RatMenu ratMenu;
-
     private OrthogonalTiledMapRenderer mapRenderer;
 
 
@@ -50,16 +44,8 @@ public class GameScreen extends RatScreen implements InputProcessor
         ratWorld.initRats(0.11f);
         mapRenderer = new OrthogonalTiledMapRenderer(ratWorld.getMap());
 
-        ratMenu = new RatMenu();
-        ratMenu.addMenuItem(new MenuItem(new Texture(Gdx.files.internal("textures/ingamemenu/menuitem.jpg"))));
-        ratMenu.addMenuItem(new MenuItem(new Texture(Gdx.files.internal("textures/ingamemenu/menuitem.jpg"))));
-        ratMenu.addMenuItem(new MenuItem(new Texture(Gdx.files.internal("textures/ingamemenu/menuitem.jpg"))));
-
         camera = new RatCamera(0.5f, 2f, 3200);
-        mapViewport = new FitViewport(960, Gdx.graphics.getHeight(), camera);
-//        menuViewport = new FitViewport(320, Gdx.graphics.getHeight(), camera);
-//        menuViewport.setScreenPosition(500, 35);
-//        menuViewport.setScreenX(555);
+        mapViewport = new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
 
         camera.moveBy(0, 0);
     }
@@ -155,8 +141,6 @@ public class GameScreen extends RatScreen implements InputProcessor
         {
             Vector3 vec = new Vector3(screenX, screenY, 0);
             camera.unproject(vec);
-            vec.x /= 0.75;
-
             ratWorld.tapped(vec.x, vec.y);
 
         }
